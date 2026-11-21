@@ -1,0 +1,66 @@
+# session-cost bundle row.
+#
+# The Host half owns all numbers: it folds the durable session log into billed
+# token totals, prices them, and reads the DeepSeek account / API-key balance.
+# The browser half only renders the JSON the Host half serves over
+# `/plugin/session-cost`.
+#
+# Every option below is optional; the defaults are what a plain install uses.
+- insert:
+    - id: session-cost
+      name: 'dsh-session-cost'
+      config:
+        # 'CNY' | 'USD' — the currency every displayed amount uses.
+        currency: 'CNY'
+        # Where the account figure comes from:
+        #   auto    — API key first, then the signed-in DeepSeek account
+        #   apikey  — only the API key balance endpoint
+        #   account — only the signed-in DeepSeek account
+        #   off     — no account query at all (pure token estimate)
+        balanceSource: 'auto'
+        # Credential reference holding the DeepSeek API key.
+        apiKeyRef: 'DEEPSEEK_API_KEY'
+        # Open-platform origin used for GET /user/balance.
+        balanceBaseUrl: 'https://api.deepseek.com'
+        # Reuse a balance reading for this long (ms) instead of re-querying.
+        balanceCacheMs: 20000
+        # Show the header badge.
+        enabled: true
+        # 「今日消费」跨会话统计（本机全部会话日志，不是当前会话自己的数字）。
+        # 时区偏移（分钟）：480 = 北京 UTC+8；设 0 则按 UTC 切日。
+        todayTimezoneOffsetMinutes: 480
+        # 重算间隔（毫秒）：两次之间复用结果；文件级解析结果另有缓存。
+        todayCacheMs: 60000
+        # 会话日志根目录；缺省从 profile 位置推出 <dsh home>/sessions。
+        # sessionsRoot: '/Users/you/.dsh/sessions'
+        # 单次扫描的会话目录上限。
+        todayMaxFiles: 200
+        # 美元→人民币汇率：展示币种是 CNY、而模型只有美元价目（OpenCode Go）时用它折算。
+        # 刻意没有默认值——汇率是外部事实，插件不猜；不配时该行只显示原生美元金额。
+        # usdToCny: 7.1
+        # 弹窗里的「按 provider」统计段：扫本机会话日志，按 provider 汇总 token 与金额。
+        # 窗口固定三档（今日 / 近 7 天 / 近 30 天），复用上面的 todayMaxFiles 与 todayCacheMs
+        # 作为扫描上限与缓存时长——两段统计走同一条日志扫描链路。
+        # 弹窗里的「订阅额度」段：已配 API key 的订阅型 provider 本周期用量。
+        # 默认接 OpenCode Go 的官方用量接口（Bearer 下面这个凭据引用里的 key）。
+        subscription:
+          enabled: true
+          kind: 'opencode-go'
+          apiKeyRef: 'OPENCODE_GO_API_KEY'
+          # 可选：覆盖用量地址（自建代理 / 换区域时用）；留空用内置地址。
+          endpoint: ''
+          # 可选：计划名（Go / Go Plus / Go Teams），只用于展示——接口不返回它，插件不猜。
+          plan: ''
+          label: ''
+          refreshMs: 60000
+          timeoutMs: 8000
+        # Log fold/route diagnostics to <profile>/.session-cost/debug.log.
+        debug: false
+        # Per-1M-token overrides merged over the built-in table, keyed by
+        # "provider/model", bare "model", or "*". Example:
+        #   prices:
+        #     deepseek-flash: { cacheHitPer1M: 0.5, cacheMissPer1M: 2, outputPer1M: 8 }
+        prices: {}
+        # Fallback price for models missing from the table (same shape as one
+        # `prices` entry). Unset means those models show tokens but no money.
+        # defaultPrice: { cacheHitPer1M: 0.04, cacheMissPer1M: 2, outputPer1M: 8 }

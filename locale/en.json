@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Session cost",
+    "description": "Show the current session's running spend in the DSH composer dock: estimated from real token usage and per-model peak/off-peak rates, cross-checked against the DeepSeek account or API-key balance. The popover also shows subscription quota (OpenCode Go usage windows and reset times)."
+  }
+}

@@ -1,0 +1,9 @@
+# 独立开发沙箱：里面有真实凭据（.credentials.yaml）与会话日志，永不入库、永不打包。
+.devhome/
+
+# 依赖与日志产物
+node_modules/
+*.log
+
+# 系统文件
+.DS_Store

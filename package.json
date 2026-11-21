@@ -1,0 +1,57 @@
+{
+  "name": "dsh-session-cost",
+  "version": "1.0.0",
+  "description": "Show the current session's total spend (estimated from real token usage, cross-checked against the DeepSeek account or API-key balance) in the DSH Web/Desktop UI.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sirfetch-d/dsh-session-cost.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Sirfetch-d/dsh-session-cost/issues"
+  },
+  "homepage": "https://github.com/Sirfetch-d/dsh-session-cost#readme",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek",
+    "harness",
+    "usage",
+    "cost",
+    "billing",
+    "opencode-go"
+  ],
+  "engines": {
+    "node": ">=22.15"
+  },
+  "icon": "./icon.svg",
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "lib/",
+    "locale/",
+    "icon.svg",
+    "test/",
+    "tools/",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": []
+    }
+  }
+}
